@@ -1,11 +1,16 @@
 package application.Model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "jogos")
+@Getter
+@Setter
 public class Jogo {
     
     @Id
@@ -14,70 +19,24 @@ public class Jogo {
     
     @Column(nullable = false)
     private String titulo;
-    
-    @ManyToMany
-    @JoinTable(
-        name = "jogos_generos",
-        joinColumns = @JoinColumn(name = "jogo_id"),
-        inverseJoinColumns = @JoinColumn(name = "genero_id")
-    )
-    private Set<Genero> generos = new HashSet<>();
-    
-    @ManyToMany
-    @JoinTable(
-        name = "jogos_plataformas",
-        joinColumns = @JoinColumn(name = "jogo_id"),
-        inverseJoinColumns = @JoinColumn(name = "plataforma_id")
-    )
-    private Set<Plataforma> plataformas = new HashSet<>();
-    
+
     @ManyToOne
-    @JoinColumn(name = "modo_jogo_id")
-    private ModoJogo modoJogo;
+    @JoinColumn(name = "id_modo_de_jogo", nullable = false)
+    private ModoJogo modoDeJogo;
+
+    // Quando é n/n tem q fazer uma tabela de junção
     
-    public Jogo() {}
-    
-    public Jogo(String titulo) {
-        this.titulo = titulo;
-    }
-    
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public String getTitulo() {
-        return titulo;
-    }
-    
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-    
-    public Set<Genero> getGeneros() {
-        return generos;
-    }
-    
-    public void setGeneros(Set<Genero> generos) {
-        this.generos = generos;
-    }
-    
-    public Set<Plataforma> getPlataformas() {
-        return plataformas;
-    }
-    
-    public void setPlataformas(Set<Plataforma> plataformas) {
-        this.plataformas = plataformas;
-    }
-    
-    public ModoJogo getModoJogo() {
-        return modoJogo;
-    }
-    
-    public void setModoJogo(ModoJogo modoJogo) {
-        this.modoJogo = modoJogo;
-    }
+    @ManyToMany
+    @JoinTable(name = "jogos_possuem_generos",
+        joinColumns = @JoinColumn(name = "id_jogo"),
+        inverseJoinColumns = @JoinColumn(name = "id_genero")
+    )
+    private Set<Genero> generos = new HashSet<Genero>();
+
+    @ManyToMany
+    @JoinTable(name = "jogos_possuem_plataformas",
+        joinColumns = @JoinColumn(name = "id_jogo"),
+        inverseJoinColumns = @JoinColumn(name = "id_plataforma"))
+    private Set<Plataforma> plataformas = new HashSet<Plataforma>();
+
 } 
